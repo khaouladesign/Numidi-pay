@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numidi Pay - Next-Gen Fintech</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0B132B;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .phone-container {
+            width: 100%;
+            max-width: 380px;
+            background: #1C2541;
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 255, 135, 0.1);
+            border: 1px solid rgba(0, 255, 135, 0.2);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00FF87;
+            letter-spacing: 1px;
+        }
+        .balance-card {
+            background: linear-gradient(135deg, #3A506B, #0B132B);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(0, 255, 135, 0.3);
+        }
+        .balance-title {
+            font-size: 14px;
+            color: #8D99AE;
+            margin-bottom: 5px;
+        }
+        .balance-amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #00FF87;
+        }
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-primary {
+            background-color: #00FF87;
+            color: #0B132B;
+        }
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .section-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .trans-info div:first-child {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .trans-info div:last-child {
+            font-size: 12px;
+            color: #8D99AE;
+        }
+        .trans-amount {
+            color: #00FF87;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="header">
+            <div class="logo">NUMIDI PAY</div>
+            <div style="font-size: 14px; color: #8D99AE;">🔔</div>
+        </div>
+
+        <div class="balance-card">
+            <div class="balance-title">Total Balance</div>
+            <div class="balance-amount">$24,580.00</div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary">Send Money</button>
+            <button class="btn btn-secondary">Receive</button>
+        </div>
+
+        <div class="section-title">Recent Transactions</div>
+        
+        <div class="transaction">
+            <div class="trans-info">
+                <div>Design Agency</div>
+                <div>Today, 14:20</div>
+            </div>
+            <div class="trans-amount">+$1,200.00</div>
+        </div>
+
+        <div class="transaction">
+            <div class="trans-info">
+                <div>Server Hosting</div>
+                <div>Yesterday</div>
+            </div>
+            <div class="trans-amount" style="color: #ff5555;">-$45.00</div>
+        </div>
+    </div>
+
+</body>
+</html>
