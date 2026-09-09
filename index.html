@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numidi Pay - Next-Gen Fintech</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #030712;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .phone-container {
+            width: 100%;
+            max-width: 390px;
+            height: 780px;
+            background: radial-gradient(circle at top, #0A192F 0%, #030712 100%);
+            border-radius: 45px;
+            padding: 20px 18px;
+            box-shadow: 0 25px 60px rgba(0, 255, 135, 0.2);
+            border: 3px solid rgba(0, 255, 135, 0.25);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screen {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            text-align: center;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* شاشة 1: البداية */
+        .logo-box {
+            width: 95px;
+            height: 95px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 135, 0.4);
+            border-radius: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 30px rgba(0, 255, 135, 0.25);
+            margin: auto auto 20px auto;
+        }
+        .logo-box svg {
+            width: 48px;
+            height: 48px;
+            stroke: #00FF87;
+            stroke-width: 2.5;
+            fill: none;
+        }
+        .app-title {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        .app-subtitle {
+            font-size: 12px;
+            color: #8D99AE;
+            letter-spacing: 1px;
+            margin-bottom: auto;
+            text-transform: uppercase;
+        }
+        .loading-bar {
+            width: 180px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px auto 10px auto;
+        }
+        .loading-fill {
+            width: 100%;
+            height: 100%;
+            background: #00FF87;
+            border-radius: 10px;
+            box-shadow: 0 0 12px #00FF87;
+        }
+
+        /* شاشة 2: البطاقة والتوصيل */
+        .bank-card {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            border-radius: 22px;
+            padding: 22px;
+            border: 1px solid rgba(0, 255, 135, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            text-align: left;
+            margin-top: 10px;
+        }
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .chip {
+            width: 38px;
+            height: 30px;
+            background: linear-gradient(135deg, #00FF87, #00B4D8);
+            border-radius: 6px;
+            opacity: 0.9;
+        }
+        .card-logo {
+            font-size: 13px;
+            font-weight: bold;
+            color: #00FF87;
+            letter-spacing: 1px;
+        }
+        .card-number {
+            font-size: 15px;
+            letter-spacing: 3px;
+            color: #E2E8F0;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #94A3B8;
+        }
+        .content-text h2 {
+            font-size: 22px;
+            font-weight: 800;
+            margin: 15px 0 8px 0;
+            line-height: 1.2;
+            color: #F8FAFC;
+        }
+        .content-text p {
+            font-size: 13px;
+            color: #94A3B8;
+            line-height: 1.4;
+        }
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 15px 0;
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+        .dot.active {
+            width: 20px;
+            background: #00FF87;
+            border-radius: 4px;
+        }
+
+        /* شاشة 3: لوحة التحكم المتقدمة */
+        .header-dash {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-top: 5px;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background: #00FF87;
+            color: #030712;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .user-info {
+            text-align: left;
+        }
+        .user-info .name {
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .user-info .status {
+            font-size: 10px;
+            color: #00FF87;
+        }
+        
+        .balance-card {
+            background: linear-gradient(135deg, #0F172A, #1E1B4B);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(0, 255, 135, 0.3);
+            text-align: left;
+            position: relative;
+        }
+        .balance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .balance-title {
+            font-size: 12px;
+            color: #94A3B8;
+        }
+        .eye-btn {
+            background: none;
+            border: none;
+            color: #94A3B8;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 800;
+            color: #00FF87;
+            margin-top: 5px;
+            letter-spacing: -0.5px;
+        }
+        .account-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 11px;
+            color: #64748B;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 8px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .btn {
+            flex: 1;
+            padding: 11px;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn-primary {
+            background: #00FF87;
+            color: #030712;
+            box-shadow: 0 4px 15px rgba(0, 255, 135, 0.3);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .section-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #E2E8F0;
+        }
+        .see-all {
+            font-size: 11px;
+            color: #00FF87;
+            cursor: pointer;
+        }
+
+        .transaction-list {
+            max-height: 150px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+        .transaction-list::-webkit-scrollbar {
+            width: 3px;
+        }
+        .transaction-list::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 135, 0.3);
+            border-radius: 10px;
+        }
+
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px 12px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            text-align: left;
+        }
+        .trans-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .trans-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 255, 135, 0.1);
+            color: #00FF87;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .trans-info div:first-child {
+            font-weight: 600;
+            font-size: 12px;
+            color: #F1F5F9;
+        }
+        .trans-info div:last-child {
+            font-size: 10px;
+            color: #64748B;
+        }
+        .trans-amount {
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        /* شريط التنقل السفلي (Bottom Nav) */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 10px 5px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 5px;
+        }
+        .nav-item {
+            font-size: 10px;
+            color: #64748B;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        .nav-item.active {
+            color: #00FF87;
+        }
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* زر رئيسي */
+        .btn-main {
+            width: 100%;
+            background: #00FF87;
+            color: #030712;
+            padding: 13px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 255, 135, 0.35);
+        }
+
+        /* نافذة الإرسال */
+        .modal {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 7, 18, 0.9);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 10;
+        }
+        .modal-content {
+            background: #0F172A;
+            border: 1px solid rgba(0, 255, 135, 0.4);
+            padding: 20px;
+            border-radius: 24px;
+            width: 100%;
+            text-align: left;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+        .modal-content h3 {
+            color: #00FF87;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        .modal-input {
+            width: 100%;
+            padding: 11px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 13px;
+            outline: none;
+        }
+        .modal-input:focus {
+            border-color: #00FF87;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        
+        <!-- الشاشة 1 -->
+        <div id="screen1" class="screen active">
+            <div></div>
+            <div>
+                <div class="logo-box">
+                    <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                </div>
+                <div class="app-title">NUMIDI PAY</div>
+                <div class="app-subtitle">Next-Gen Digital Banking</div>
+            </div>
+            <div>
+                <div class="loading-bar"><div class="loading-fill"></div></div>
+                <button class="btn-main" onclick="goToScreen(2)" style="margin-top: 15px;">START APP &rarr;</button>
+            </div>
+        </div>
+
+        <!-- الشاشة 2 -->
+        <div id="screen2" class="screen">
+            <div style="font-size: 11px; color: #64748B; text-align: right; font-weight: bold;">09:41</div>
+            
+            <div class="bank-card">
+                <div class="card-top">
+                    <div class="chip"></div>
+                    <div class="card-logo">NUMIDI VIP</div>
+                </div>
+                <div class="card-number">•••• •••• •••• 4089</div>
+                <div class="card-footer">
+                    <span>CARD HOLDER: KHAOULA</span>
+                    <span>12/28</span>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <h2>GLOBAL TRANSFERS<br>& SMART ASSETS</h2>
+                <p>Manage your wealth with zero commission, high security, and instant global processing.</p>
+            </div>
+
+            <div>
+                <div class="dots">
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                </div>
+                <button class="btn-main" onclick="goToScreen(3)">CONTINUE &rarr;</button>
+            </div>
+        </div>
+
+        <!-- الشاشة 3 -->
+        <div id="screen3" class="screen">
+            <div>
+                <div class="header-dash">
+                    <div class="user-profile">
+                        <div class="avatar">K</div>
+                        <div class="user-info">
+                            <div class="name">Khoula D.</div>
+                            <div class="status">● VIP Verified</div>
+                        </div>
+                    </div>
+                    <div style="cursor: pointer; color: #64748B;" onclick="goToScreen(1)" title="Restart">🔄</div>
+                </div>
+
+                <div class="balance-card">
+                    <div class="balance-header">
+                        <div class="balance-title">Total Balance (USD)</div>
+                        <button class="eye-btn" onclick="toggleBalance()">👁️</button>
+                    </div>
+                    <div class="balance-amount" id="balanceText">$24,580.00</div>
+                    <div class="account-details">
+                        <span>Acc: ****9012</span>
+                        <span>Region: DZ / Global</span>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="openModal()">↗ Send Money</button>
+                    <button class="btn btn-secondary" onclick="alert('Top-up gateway opened!')">+ Top Up</button>
+                </div>
+
+                <div class="section-header">
+                    <div class="section-title">Recent Transactions</div>
+                    <div class="see-all" onclick="alert('All transactions loaded.')">View All</div>
+                </div>
+                
+                <div class="transaction-list" id="transList">
+                    <div class="transaction">
+                        <div class="trans-left">
+                            <div class="trans-icon">↗</div>
+                            <div class="trans-info">
+                                <div>Design Agency</div>
+                               <div>Today, 14:20</div>
+                            </div>
+                        </div>
+                        <div class="trans-amount" style="color: #00FF87;">+$1,200.00</div>
+                    </div>
+                    <div class="transaction">
+                        <div class="trans-left">
+                            <div class="trans-icon" style="background: rgba(255,85,85,0.1); color: #ff5555;">↙</div>
+                            <div class="trans-info">
+                                <div>Cloud Hosting</div>
+                                <div>Yesterday</div>
+                            </div>
+                        </div>
+                        <div class="trans-amount" style="color: #ff5555;">-$45.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- شريط التنقل السفلي -->
+            <div class="bottom-nav">
+                <div class="nav-item active">
+                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+                    <span>Home</span>
+                </div>
+                <div class="nav-item" onclick="alert('Cards Manager')">
+                    <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                    <span>Cards</span>
+                </div>
+                <div class="nav-item" onclick="alert('Analytics & Stats')">
+                    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Stats</span>
+                </div>
+                <div class="nav-item" onclick="alert('Settings & Profile')">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .69.41 1.3 1.01 1.51H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <span>Settings</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- نافذة التحويل -->
+        <div id="sendModal" class="modal">
+            <div class="modal-content">
+                <h3>Send Money Instantly</h3>
+                <input type="text" id="receiverName" class="modal-input" placeholder="Receiver Name (e.g. Salim)">
+                <input type="number" id="sendAmount" class="modal-input" placeholder="Amount ($)">
+                <div style="display: flex; gap: 10px; margin-top: 5px;">
+                    <button class="btn btn-primary" onclick="sendMoney()">Confirm Transfer</button>
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentBalance = 24580.00;
+        let isBalanceVisible = true;
+
+        function goToScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen' + screenNumber).classList.add('active');
+        }
+
+        function toggleBalance() {
+            isBalanceVisible = !isBalanceVisible;
+            let balEl = document.getElementById('balanceText');
+            if(isBalanceVisible) {
+                balEl.innerText = '$' + currentBalance.toLocaleString() + '.00';
+            } else {
+                balEl.innerText = '$ •••••••';
+            }
+        }
+
+        function openModal() {
+            document.getElementById('sendModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('sendModal').style.display = 'none';
+        }
+
+        function sendMoney() {
+            let name = document.getElementById('receiverName').value;
+            let amount = parseFloat(document.getElementById('sendAmount').value);
+
+            if(!name || isNaN(amount) || amount <= 0) {
+                alert('Please enter valid transfer details!');
+                return;
+            }
+
+            if(amount > currentBalance) {
+                alert('Error: Insufficient funds in account!');
+                return;
+            }
+
+            currentBalance -= amount;
+            
+            if(isBalanceVisible) {
+                document.getElementById('balanceText').innerText = '$' + currentBalance.toLocaleString() + '.00';
+            }
+
+            let list = document.getElementById('transList');
+            list.innerHTML = `
+                <div class="transaction">
+                    <div class="trans-left">
+                        <div class="trans-icon" style="background: rgba(255,85,85,0.1); color: #ff5555;">↙</div>
+                        <div class="trans-info">
+                            <div>To: ${name}</div>
+                            <div>Just now</div>
+                        </div>
+                    </div>
+                    <div class="trans-amount" style="color: #ff5555;">-$${amount.toLocaleString()}</div>
+                </div>
+            ` + list.innerHTML;
+
+            closeModal();
+            alert('Secure transfer of $' + amount + ' to ' + name + ' was successful!');
+        }
+    </script>
+</body>
+</html>
