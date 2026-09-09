@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numidi Pay - Next-Gen Fintech</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #050B14;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .phone-container {
+            width: 100%;
+            max-width: 380px;
+            height: 750px;
+            background: radial-gradient(circle at center, #0B192C 0%, #030712 100%);
+            border-radius: 40px;
+            padding: 25px 20px;
+            box-shadow: 0 20px 50px rgba(0, 255, 135, 0.15);
+            border: 2px solid rgba(0, 255, 135, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screen {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            text-align: center;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* شاشة 1: البداية */
+        .logo-box {
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 135, 0.4);
+            border-radius: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 25px rgba(0, 255, 135, 0.2);
+            margin: auto auto 20px auto;
+        }
+        .logo-box svg {
+            width: 45px;
+            height: 45px;
+            stroke: #00FF87;
+            stroke-width: 3;
+            fill: none;
+        }
+        .app-title {
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        .app-subtitle {
+            font-size: 13px;
+            color: #8D99AE;
+            letter-spacing: 0.5px;
+            margin-bottom: auto;
+        }
+        .loading-bar {
+            width: 180px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px auto 10px auto;
+        }
+        .loading-fill {
+            width: 100%;
+            height: 100%;
+            background: #00FF87;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #00FF87;
+        }
+
+        /* شاشة 2: البطاقة والتوصيل */
+        .bank-card {
+            background: linear-gradient(135deg, #112233 0%, #07101B 100%);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(0, 255, 135, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 255, 135, 0.15);
+            text-align: left;
+            margin-top: 15px;
+            transform: rotate(-2deg);
+        }
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .chip {
+            width: 35px;
+            height: 28px;
+            background: #00FF87;
+            border-radius: 5px;
+            opacity: 0.8;
+        }
+        .card-logo {
+            font-size: 14px;
+            font-weight: bold;
+            color: #00FF87;
+        }
+        .card-number {
+            font-size: 16px;
+            letter-spacing: 2px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #8D99AE;
+        }
+        .content-text h2 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            line-height: 1.3;
+        }
+        .content-text p {
+            font-size: 12px;
+            color: #8D99AE;
+        }
+        .dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 10px 0;
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+        .dot.active {
+            width: 18px;
+            background: #00FF87;
+            border-radius: 4px;
+        }
+
+        /* شاشة 3: لوحة التحكم والرصيد */
+        .header-dash {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .logo-dash {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00FF87;
+            letter-spacing: 1px;
+        }
+        .balance-card {
+            background: linear-gradient(135deg, #1C2541, #0B132B);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 135, 0.3);
+            text-align: left;
+        }
+        .balance-title {
+            font-size: 13px;
+            color: #8D99AE;
+            margin-bottom: 5px;
+        }
+        .balance-amount {
+            font-size: 26px;
+            font-weight: bold;
+            color: #00FF87;
+        }
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .btn-primary {
+            background-color: #00FF87;
+            color: #050B14;
+        }
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .section-title {
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        .transaction-list {
+            max-height: 160px;
+            overflow-y: auto;
+        }
+        .transaction {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        .trans-info div:first-child {
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .trans-info div:last-child {
+            font-size: 11px;
+            color: #8D99AE;
+        }
+        .trans-amount {
+            color: #00FF87;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        /* زر عام */
+        .btn-main {
+            width: 100%;
+            background: #00FF87;
+            color: #030712;
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: bold;
+            font-size: 15px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 255, 135, 0.4);
+        }
+
+        /* نافذة إرسال الأموال المنبثقة التفاعلية */
+        .modal {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 7, 18, 0.85);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 10;
+        }
+        .modal-content {
+            background: #112233;
+            border: 1px solid rgba(0, 255, 135, 0.4);
+            padding: 20px;
+            border-radius: 20px;
+            width: 100%;
+            text-align: left;
+        }
+        .modal-content h3 {
+            color: #00FF87;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        
+        <!-- الشاشة الأولى: البداية -->
+        <div id="screen1" class="screen active">
+            <div></div>
+            <div>
+                <div class="logo-box">
+                    <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                </div>
+                <div class="app-title">NUMIDI PAY</div>
+                <div class="app-subtitle">FAST & SECURE DIGITAL PAYMENTS</div>
+            </div>
+            <div>
+                <div class="loading-bar"><div class="loading-fill"></div></div>
+                <button class="btn-main" onclick="goToScreen(2)" style="margin-top: 15px;">START &rarr;</button>
+            </div>
+        </div>
+
+        <!-- الشاشة الثانية: البطاقة والترحيب -->
+        <div id="screen2" class="screen">
+            <div style="font-size: 12px; color: #8D99AE; text-align: right;">9:40</div>
+            
+            <div class="bank-card">
+                <div class="card-top">
+                    <div class="chip"></div>
+                    <div class="card-logo">NUMIDI PAY</div>
+                </div>
+                <div class="card-number">PREMIUM DEBIT</div>
+                <div class="card-footer">
+                    <span>EXPIRE 12/26</span>
+                    <span>SECURE</span>
+                </div>
+            </div>
+
+            <div class="content-text">
+                <h2>FAST & GLOBAL<br>MONEY TRANSFERS</h2>
+                <p>Securely send funds anywhere in the world, instantly.</p>
+                <p style="color: #00FF87; font-weight: bold; margin-top: 5px;">ZERO FRICTION.</p>
+            </div>
+
+            <div>
+                <div class="dots">
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                </div>
+                <button class="btn-main" onclick="goToScreen(3)">GET STARTED &rarr;</button>
+            </div>
+        </div>
+
+        <!-- الشاشة الثالثة: لوحة التحكم التفاعلية -->
+        <div id="screen3" class="screen">
+            <div>
+                <div class="header-dash">
+                    <div class="logo-dash">NUMIDI PAY</div>
+                    <div style="font-size: 13px; cursor: pointer; color: #8D99AE;" onclick="goToScreen(1)">🔄 إعادة</div>
+                </div>
+
+                <div class="balance-card">
+                    <div class="balance-title">Total Balance</div>
+                    <div class="balance-amount" id="balanceText">$24,580.00</div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="openModal()">Send Money</button>
+                    <button class="btn btn-secondary" onclick="alert('Ready to receive funds!')">Receive</button>
+                </div>
+
+                <div class="section-title">Recent Transactions</div>
+                
+                <div class="transaction-list" id="transList">
+                    <div class="transaction">
+                        <div class="trans-info">
+                            <div>Design Agency</div>
+                            <div>Today, 14:20</div>
+                        </div>
+                        <div class="trans-amount">+$1,200.00</div>
+                    </div>
+                    <div class="transaction">
+                        <div class="trans-info">
+                            <div>Server Hosting</div>
+                            <div>Yesterday</div>
+                        </div>
+                        <div class="trans-amount" style="color: #ff5555;">-$45.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-size: 11px; color: #8D99AE; margin-top: 5px;">
+                Designed with UI/UX & AI Workflow 🚀
+            </div>
+        </div>
+
+        <!-- نافذة إرسال الأموال المنبثقة التفاعلية -->
+        <div id="sendModal" class="modal">
+            <div class="modal-content">
+                <h3>Send Money Instantly</h3>
+                <input type="text" id="receiverName" class="modal-input" placeholder="Receiver Name (e.g. Ali)">
+                <input type="number" id="sendAmount" class="modal-input" placeholder="Amount ($)">
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="sendMoney()">Confirm</button>
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentBalance = 24580.00;
+
+        function goToScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen' + screenNumber).classList.add('active');
+        }
+
+        function openModal() {
+            document.getElementById('sendModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('sendModal').style.display = 'none';
+        }
+
+        function sendMoney() {
+            let name = document.getElementById('receiverName').value;
+            let amount = parseFloat(document.getElementById('sendAmount').value);
+
+            if(!name || isNaN(amount) || amount <= 0) {
+                alert('Please enter valid details!');
+                return;
+            }
+
+            if(amount > currentBalance) {
+                alert('Insufficient balance!');
+                return;
+            }
+
+            // تحديث الرصيد
+            currentBalance -= amount;
+            document.getElementById('balanceText').innerText = '$' + currentBalance.toLocaleString() + '.00';
+
+            // إضافة المعاملة للقائمة
+            let list = document.getElementById('transList');
+            list.innerHTML = `
+                <div class="transaction">
+                    <div class="trans-info">
+                        <div>To: ${name}</div>
+                        <div>Just now</div>
+                    </div>
+                    <div class="trans-amount" style="color: #ff5555;">-$${amount.toLocaleString()}</div>
+                </div>
+            ` + list.innerHTML;
+
+            closeModal();
+            alert('Transfer successful to ' + name + '!');
+        }
+    </script>
+</body>
+</html>
